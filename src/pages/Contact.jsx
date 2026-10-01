@@ -1,7 +1,7 @@
 import { useState } from "react";
+import emailjs from "@emailjs/browser";
 
 function Contact() {
-
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -10,9 +10,7 @@ function Contact() {
 
   const [submitted, setSubmitted] = useState(false);
 
-
   const handleChange = (e) => {
-
     const { name, value } = e.target;
 
     setFormData({
@@ -20,41 +18,55 @@ function Contact() {
       [name]: value
     });
 
+    if (submitted) {
+      setSubmitted(false);
+    }
   };
 
-
-  const handleSubmit = (e) => {
-
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (
-      !formData.name ||
-      !formData.email ||
-      !formData.message
-    ) {
+    if (!formData.name || !formData.email || !formData.message) {
       alert("Please fill all fields.");
       return;
     }
 
-    setSubmitted(true);
+    try {
+      const response = await emailjs.send(
+        "service_lqnawwm",
+        "template_74ku3xp",
+        {
+          from_name: formData.name,
+          from_email: formData.email,
+          message: formData.message,
+          reply_to: formData.email
+        },
+        {
+          publicKey: "sLda2Vwhmvol8i44r"
+        }
+      );
 
-    setFormData({
-      name: "",
-      email: "",
-      message: ""
-    });
+      console.log("EmailJS response:", response);
 
+      setSubmitted(true);
+
+      setFormData({
+        name: "",
+        email: "",
+        message: ""
+      });
+
+    } catch (error) {
+      console.error("EmailJS Error:", error);
+
+      alert("Message could not be sent. Please try again.");
+    }
   };
 
-
   return (
-
     <main className="contact-page">
 
       <section className="contact-section">
-
-
-        {/* Heading */}
 
         <div className="section-heading">
 
@@ -73,25 +85,15 @@ function Contact() {
 
         </div>
 
-
-
-        {/* Contact Content */}
-
         <div className="contact-container">
-
-
-          {/* Contact Information */}
 
           <div className="contact-info">
 
             <div className="contact-info-header">
 
-              <span>
-                👋
-              </span>
+              <span>👋</span>
 
               <div>
-
                 <h2>
                   Hi, I'm Amey Prabhakar Mahajan
                 </h2>
@@ -100,14 +102,9 @@ function Contact() {
                   I'm always open to discussing new projects,
                   ideas and opportunities.
                 </p>
-
               </div>
 
             </div>
-
-
-
-            {/* Email */}
 
             <div className="contact-item">
 
@@ -116,22 +113,11 @@ function Contact() {
               </div>
 
               <div>
-
-                <small>
-                  Email
-                </small>
-
-                <p>
-                  mahajanamey26@gmail.com
-                </p>
-
+                <small>Email</small>
+                <p>mahajanamey26@gmail.com</p>
               </div>
 
             </div>
-
-
-
-            {/* Phone */}
 
             <div className="contact-item">
 
@@ -140,22 +126,11 @@ function Contact() {
               </div>
 
               <div>
-
-                <small>
-                  Phone
-                </small>
-
-                <p>
-                  +91 7498543674
-                </p>
-
+                <small>Phone</small>
+                <p>+91 7498543674</p>
               </div>
 
             </div>
-
-
-
-            {/* Location */}
 
             <div className="contact-item">
 
@@ -164,35 +139,18 @@ function Contact() {
               </div>
 
               <div>
-
-                <small>
-                  Location
-                </small>
-
-                <p>
-                  Pune, Maharashtra, India
-                </p>
-
+                <small>Location</small>
+                <p>Pune, Maharashtra, India</p>
               </div>
 
             </div>
 
-
-
-            {/* Contact Note */}
-
             <div className="contact-note">
-
               🚀 Currently learning, building and looking
               forward to new opportunities.
-
             </div>
 
           </div>
-
-
-
-          {/* Contact Form */}
 
           <div className="contact-form-card">
 
@@ -204,25 +162,13 @@ function Contact() {
               Fill in the details below and send your message.
             </p>
 
-
-            {/* Success Message */}
-
             {submitted && (
-
               <div className="success-message">
-
-                ✓ Message submitted successfully!
-
+                ✓ Message sent successfully!
               </div>
-
             )}
 
-
-
             <form onSubmit={handleSubmit}>
-
-
-              {/* Name */}
 
               <div className="contact-form-group">
 
@@ -240,10 +186,6 @@ function Contact() {
 
               </div>
 
-
-
-              {/* Email */}
-
               <div className="contact-form-group">
 
                 <label>
@@ -260,10 +202,6 @@ function Contact() {
 
               </div>
 
-
-
-              {/* Message */}
-
               <div className="contact-form-group">
 
                 <label>
@@ -279,21 +217,12 @@ function Contact() {
 
               </div>
 
-
-
-              {/* Submit Button */}
-
               <button
                 type="submit"
                 className="contact-submit-btn"
               >
-
                 Send Message
-
-                <span>
-                  →
-                </span>
-
+                <span>→</span>
               </button>
 
             </form>
@@ -305,7 +234,6 @@ function Contact() {
       </section>
 
     </main>
-
   );
 }
 
